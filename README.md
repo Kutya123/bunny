@@ -36,4 +36,4 @@ JavaScript (Vanilla JS)
 
 ![Desctop](./bunny.png)
 
-[Demo](http://dashing-croquembouche-a0a6d7.netlify.app/)
+[Посмотреть DEMO версию](http://dashing-croquembouche-a0a6d7.netlify.app/)
