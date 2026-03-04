@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Кнопка боится мыши</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: white;
+      font-family: sans-serif;
+    }
+
+    #scared-button {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border: none;
+      border-radius: 8px;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      transition: background-image 0.2s;
+    }
+
+    #scared-button.idle1 {
+      background-image: url('images/стоит.jpg');
+    }
+
+    #scared-button.running-left {
+      background-image: url('images/бегает налево.jpg');
+    }
+
+    #scared-button.running-right {
+      background-image: url('images/бегает направо.jpg');
+    }
+  </style>
+</head>
+<body>
+
+  <button id="scared-button" class="idle1"></button>
+
+  <script>
+    const button = document.getElementById('scared-button');
+    const dangerDistance = 100;
+
+    let posX = window.innerWidth / 2 - 75;
+    let posY = window.innerHeight / 2 - 75;
+    let targetX = posX;
+    let targetY = posY;
+    let moving = false;
+
+    function setIdle() {
+      button.classList.remove('running-left', 'running-right');
+      if (!button.classList.contains('idle1')) {
+        button.classList.add('idle1');
+      }
+    }
+
+    function moveSmoothly() {
+      if (!moving) return;
+
+      const dx = targetX - posX;
+      const dy = targetY - posY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 1) {
+        moving = false;
+        setIdle();
+        return;
+      }
+
+      posX += dx * 0.1;
+      posY += dy * 0.1;
+      button.style.transform = `translate(${posX}px, ${posY}px)`;
+
+      requestAnimationFrame(moveSmoothly);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      const buttonCenterX = posX + 75;
+      const buttonCenterY = posY + 75;
+
+      const dx = e.clientX - buttonCenterX;
+      const dy = e.clientY - buttonCenterY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < dangerDistance && !moving) {
+      
+        let newX = Math.random() * (window.innerWidth - 150);
+        let newY = Math.random() * (window.innerHeight - 150);
+
+        const direction = newX < posX ? 'left' : 'right';
+        button.classList.remove('idle1', 'running-left', 'running-right');
+        button.classList.add(direction === 'left' ? 'running-left' : 'running-right');
+
+        targetX = newX;
+        targetY = newY;
+        moving = true;
+        requestAnimationFrame(moveSmoothly);
+      }
+    });
+
+    
+    button.style.transform = `translate(${posX}px, ${posY}px)`;
+    setIdle();
+  </script>
+
+</body>
+</html>
